@@ -1,7 +1,12 @@
 const { ValidationError } = require("express-validation");
+const logger = require("../config/logger");
+
+exports.logErrors = (err, req, res, next) => {
+  logger.error(err);
+  next(err);
+};
 
 exports.validationError = (err, req, res, next) => {
-  console.log(err);
   if (err instanceof ValidationError) {
     res.status(err.statusCode);
     res.json(err);

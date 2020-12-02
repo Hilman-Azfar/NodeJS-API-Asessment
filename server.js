@@ -1,6 +1,6 @@
 const app = require("./config/setup");
 const config = require("./config/env");
-const logger = require("./config/logging");
+const logger = require("./config/logger");
 
 // set up db connection first
 // if successful, set up server
@@ -9,15 +9,15 @@ const logger = require("./config/logging");
 const PORT = config.PORT || 8080;
 const server = app.listen(PORT, () => {
   // add logging
-  console.log("server up and running on: " + PORT);
+  logger.info(`Server running on port: ${PORT}`);
 });
 
 // handle shutdown and disconnect from db and end running processes
 const shutdown = () => {
   // log shutdown sequence
-  console.log("server shutting down");
+  logger.info("server shutting down");
   server.close(() => {
-    console.log("server closed. peace");
+    logger.info("server shutted down successfully. peace.");
     process.exit(0);
   });
 };
