@@ -1,3 +1,4 @@
 #config files and secrets
-/config
 .env
+
+node_modules/

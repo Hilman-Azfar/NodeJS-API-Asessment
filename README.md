@@ -24,8 +24,14 @@ SECRET=foobar
 
 ## Usage
 
+Main entry is server.js
+
 ```sh
+// production
 npm start
+
+// development
+npm run dev
 
 # options for debugging
 SET debugging true
