@@ -2,7 +2,11 @@ const express = require("express");
 const helmet = require("helmet");
 const config = require("./env");
 const fs = require("fs");
-const { errorHandler, genericError } = require("../middlewares/error");
+const {
+  errorHandler,
+  genericError,
+  validationError,
+} = require("../middlewares/error");
 const routes = require("../routes");
 
 const app = express();
@@ -25,6 +29,7 @@ app.use(routes);
 
 // error handling
 app.use(genericError);
+app.use(validationError);
 app.use(errorHandler);
 
 module.exports = app;

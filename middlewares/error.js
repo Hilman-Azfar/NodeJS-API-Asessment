@@ -1,3 +1,15 @@
+const { ValidationError } = require("express-validation");
+
+exports.validationError = (err, req, res, next) => {
+  console.log(err);
+  if (err instanceof ValidationError) {
+    res.status(err.statusCode);
+    res.json(err);
+  } else {
+    next(err);
+  }
+};
+
 exports.genericError = (req, res, next) => {
   const err = new Error("Endpoint does not exist...");
   err.status = 404;
