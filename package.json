@@ -1,0 +1,14 @@
+{
+  "name": "NodeJS-API-Asessment",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0",
+  "description": "Api for teachers to perform administrative functions for their students",
+  "main": "index.js",
+  "repository": "https://github.com/Hilman-Azfar/NodeJS-API-Asessment.git",
+  "author": "Hilman Azfar <m.hilman.azfar@gmail.com>",
+  "license": "MIT"
+}
