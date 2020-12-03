@@ -1,6 +1,7 @@
 const app = require("./config/setup");
 const config = require("./config/env");
 const logger = require("./config/logger");
+const db = require("./config/db");
 
 // set up db connection first
 // if successful, set up server
@@ -15,10 +16,15 @@ const server = app.listen(PORT, () => {
 // handle shutdown and disconnect from db and end running processes
 const shutdown = () => {
   // log shutdown sequence
-  logger.info("server shutting down");
-  server.close(() => {
-    logger.info("server shutted down successfully. peace.");
-    process.exit(0);
+  logger.info("closing all pool connections");
+  db.pool.end(() => {
+    logger.info("all pool connections closed");
+    logger.info("server shutting down");
+
+    server.close(() => {
+      logger.info("server shutted down successfully. peace.");
+      process.exit(0);
+    });
   });
 };
 

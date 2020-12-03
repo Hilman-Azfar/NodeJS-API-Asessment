@@ -1,5 +1,8 @@
+const teacherModels = require("../models/teacher.model");
+
 exports.register = async (req, res, next) => {
   try {
+    await teacherModels.register(req);
     res.json({
       success: true,
       message: "register",
