@@ -15,7 +15,8 @@ exports.register = async (req, res, next) => {
 
 exports.commonStudents = async (req, res, next) => {
   try {
-    const students = await teacherModels.commonStudents(req);
+    let { teacher } = req.query;
+    const students = await teacherModels.commonStudents(teacher);
     res.json({
       students,
     });
@@ -27,9 +28,12 @@ exports.commonStudents = async (req, res, next) => {
 
 exports.suspend = async (req, res, next) => {
   try {
+    const { student } = req.body;
+    await teacherModels.suspendOne(student);
+
+    res.status(204);
     res.json({
       success: true,
-      message: "suspend",
     });
   } catch (err) {
     err.status = 404;

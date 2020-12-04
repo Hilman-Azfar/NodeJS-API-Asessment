@@ -32,9 +32,8 @@ exports.register = async (req) => {
   }
 };
 
-exports.commonStudents = async (req) => {
+exports.commonStudents = async (teacher) => {
   try {
-    let { teacher } = req.query;
     // due to query parser the query can be a string or an array
     // depending on user input
     // the sql value needs to be an array of arrays
@@ -82,6 +81,18 @@ exports.commonStudents = async (req) => {
     });
 
     return resultArray;
+  } catch (err) {
+    throw err;
+  }
+};
+
+exports.suspendOne = async (student) => {
+  try {
+    const sql = `UPDATE student
+                 SET suspended = true
+                 WHERE email = ?`;
+    const value = [student];
+    await db.pool.query(sql, value);
   } catch (err) {
     throw err;
   }
