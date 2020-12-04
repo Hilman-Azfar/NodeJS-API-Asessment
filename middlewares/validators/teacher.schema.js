@@ -10,7 +10,12 @@ module.exports = {
   },
   commonStudents: {
     query: Joi.object({
-      teacher: Joi.string().email().required(),
+      teacher: Joi.alternatives()
+        .try(
+          Joi.string().email().required(),
+          Joi.array().items(Joi.string().email().required())
+        )
+        .required(),
     }),
   },
   suspend: {

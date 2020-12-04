@@ -15,9 +15,9 @@ exports.register = async (req, res, next) => {
 
 exports.commonStudents = async (req, res, next) => {
   try {
+    const students = await teacherModels.commonStudents(req);
     res.json({
-      success: true,
-      message: req.query,
+      students,
     });
   } catch (err) {
     err.status = 404;
