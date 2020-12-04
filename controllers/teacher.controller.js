@@ -43,6 +43,7 @@ exports.suspend = async (req, res, next) => {
 
 exports.retrieveForNotifications = async (req, res, next) => {
   try {
+    await teacherModels.retrieveForNotifications(req.body);
     res.json({
       success: true,
       message: "retrieve",

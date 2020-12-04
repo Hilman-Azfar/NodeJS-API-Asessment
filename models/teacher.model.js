@@ -1,4 +1,5 @@
 const db = require("../config/db");
+const getMentionsAndText = require("../utility/getMentionsAndText");
 
 exports.register = async (req) => {
   try {
@@ -74,7 +75,8 @@ exports.commonStudents = async (teacher) => {
                     WHERE email IN (?)
                  AND c1.teacher_id <> c2.teacher_id
                   )`;
-    const result = await db.pool.query(sql, [teacher]);
+    const value = [teacher];
+    const result = await db.pool.query(sql, value);
 
     const resultArray = result.map((item) => {
       return item.email;
@@ -93,6 +95,23 @@ exports.suspendOne = async (student) => {
                  WHERE email = ?`;
     const value = [student];
     await db.pool.query(sql, value);
+  } catch (err) {
+    throw err;
+  }
+};
+
+exports.retrieveForNotifications = async (data) => {
+  try {
+    // parse notification to check for mentions
+    // create notification
+    // create notification_group for all students of teacher and
+    // mentions
+
+    const { teacher, notification } = data;
+    const parsedNotification = getMentionsAndText(notification);
+    const [message, ...mentions] = parsedNotification;
+    console.log(message);
+    console.log(mentions);
   } catch (err) {
     throw err;
   }
