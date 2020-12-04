@@ -22,7 +22,7 @@ const shutdown = () => {
     logger.info("server shutting down");
 
     server.close(() => {
-      logger.info("server shutted down successfully. peace.");
+      logger.info("server shut down successfully. peace.");
       process.exit(0);
     });
   });

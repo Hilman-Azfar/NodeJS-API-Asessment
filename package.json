@@ -3,6 +3,7 @@
   "scripts": {
     "start": "NODE_ENV=production node index.js",
     "dev": "nodemon server.js",
+    "seed": "node ./seed/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "version": "1.0.0",
