@@ -6,7 +6,7 @@ module.exports = (notification) => {
 
   // get a better email match which doesnt need manual updates
   const parsed = notification.split(
-    /(?:\s@)(?=[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|gov|sg)\b)/g
+    /(?:\s@)(?=[a-zA-Z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-zA_Z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|gov|sg)\b)/g
   );
   return parsed;
 };

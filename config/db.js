@@ -29,10 +29,9 @@ const db = {
       pool.query = util.promisify(pool.query);
 
       // create database if doesnt exist
-      // sql injection not possible because multiple statements are disabled
-      const dbsql = `CREATE DATABASE IF NOT EXISTS ${config.MYSQL.database}`;
-      const dbResult = await pool.query(dbsql);
-
+      let dbsql = `CREATE DATABASE IF NOT EXISTS ??`;
+      dbsql = mysql.format(dbsql, [config.MYSQL.database]);
+      await pool.query(dbsql);
       await pool.end();
 
       // reestablish pool with database
@@ -65,6 +64,33 @@ const db = {
             ON DELETE CASCADE
       )`;
       await pool.query(classTable);
+
+      // max row size is 65 535 bytes
+      // 10000 char limit is approx 1600 words
+      // default is latin1, change to utf8 to store
+      // multiple languages
+      const notificationTable = `CREATE TABLE IF NOT EXISTS notification(
+          notification_id INT AUTO_INCREMENT PRIMARY KEY,
+          sender_id INT NOT NULL,
+          message VARCHAR(10000) NOT NULL,
+          FOREIGN KEY(sender_id)
+              REFERENCES teacher(teacher_id)
+              ON DELETE CASCADE
+      ) CHARACTER SET 'utf8'`;
+      await pool.query(notificationTable);
+
+      const notificationGroupTable = `CREATE TABLE IF NOT EXISTS notification_group(
+        notification_group_id INT AUTO_INCREMENT PRIMARY KEY,
+        recipient_id INT NOT NULL,
+        notification_id INT NOT NULL,
+        FOREIGN KEY(recipient_id)
+          REFERENCES student(student_id)
+          ON DELETE CASCADE,
+        FOREIGN KEY(notification_id)
+          REFERENCES notification(notification_id)
+          ON DELETE CASCADE
+      )`;
+      await pool.query(notificationGroupTable);
 
       logger.info("db connected");
       this.pool = pool;

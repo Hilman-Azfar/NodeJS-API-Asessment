@@ -110,8 +110,48 @@ exports.retrieveForNotifications = async (data) => {
     const { teacher, notification } = data;
     const parsedNotification = getMentionsAndText(notification);
     const [message, ...mentions] = parsedNotification;
-    console.log(message);
-    console.log(mentions);
+
+    // insert notification, get id
+    // get all the recipients email to respond and add to
+    // notification group
+
+    const sql = `INSERT INTO notification (sender_id, message)
+                 VALUES ( 
+                   (SELECT teacher_id FROM teacher
+                    WHERE email = ?), 
+                   ?
+                  )`;
+    const result = await db.pool.query(sql, [teacher, message]);
+    const notification_id = result.insertId;
+
+    let getRecipientsSql = `SELECT s.email
+                              FROM student s
+                              INNER JOIN class c
+                                ON s.student_id = c.student_id
+                                AND s.suspended = false
+                              INNER JOIN teacher t
+                                ON c.teacher_id = t.teacher_id
+                              WHERE t.email = ?
+                              `;
+    if (mentions.length > 0) {
+      getRecipientsSql += "OR s.email in (?)";
+    }
+
+    const result2 = await db.pool.query(getRecipientsSql, [teacher, mentions]);
+    const recipients = result2.map((item) => item.email);
+
+    const notificationGroupSql = `INSERT INTO notification_group(notification_id, recipient_id)
+                                    SELECT ?, student_id
+                                    FROM student
+                                    WHERE email in (?)`;
+    const result3 = await db.pool.query(notificationGroupSql, [
+      notification_id,
+      recipients,
+    ]);
+
+    console.log(recipients);
+    console.log(result3);
+    return recipients;
   } catch (err) {
     throw err;
   }

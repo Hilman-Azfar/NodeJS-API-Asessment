@@ -43,10 +43,9 @@ exports.suspend = async (req, res, next) => {
 
 exports.retrieveForNotifications = async (req, res, next) => {
   try {
-    await teacherModels.retrieveForNotifications(req.body);
+    const recipients = await teacherModels.retrieveForNotifications(req.body);
     res.json({
-      success: true,
-      message: "retrieve",
+      recipients,
     });
   } catch (err) {
     err.status = 404;
