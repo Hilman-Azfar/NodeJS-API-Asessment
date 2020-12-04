@@ -103,9 +103,6 @@ exports.suspendOne = async (student) => {
 exports.retrieveForNotifications = async (data) => {
   try {
     // parse notification to check for mentions
-    // create notification
-    // create notification_group for all students of teacher and
-    // mentions
 
     const { teacher, notification } = data;
     const parsedNotification = getMentionsAndText(notification);
@@ -148,9 +145,6 @@ exports.retrieveForNotifications = async (data) => {
       notification_id,
       recipients,
     ]);
-
-    console.log(recipients);
-    console.log(result3);
     return recipients;
   } catch (err) {
     throw err;

@@ -30,11 +30,7 @@ exports.suspend = async (req, res, next) => {
   try {
     const { student } = req.body;
     await teacherModels.suspendOne(student);
-
-    res.status(204);
-    res.json({
-      success: true,
-    });
+    res.sendStatus(204);
   } catch (err) {
     err.status = 404;
     next(err);
