@@ -1,21 +1,21 @@
-const app = require("./config/setup");
 const config = require("./config/env");
 const logger = require("./config/logger");
+const retryPromise = require("./utility/retryPromise");
 const db = require("./config/db");
 
-// set up db connection first
-// if successful, set up server
+// set up handled in here
+const app = require("./config/express");
 
-// listen to port
+retryPromise(db.initialize);
+
 const PORT = config.PORT || 8080;
+
 const server = app.listen(PORT, () => {
-  // add logging
   logger.info(`Server running on port: ${PORT}`);
 });
 
 // handle shutdown and disconnect from db and end running processes
 const shutdown = () => {
-  // log shutdown sequence
   logger.info("closing all pool connections");
   db.pool.end(() => {
     logger.info("all pool connections closed");

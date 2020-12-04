@@ -3,10 +3,7 @@ const teacherModels = require("../models/teacher.model");
 exports.register = async (req, res, next) => {
   try {
     await teacherModels.register(req);
-    res.json({
-      success: true,
-      message: "register",
-    });
+    res.sendStatus(204);
   } catch (err) {
     err.status = 404;
     next(err);
@@ -17,6 +14,7 @@ exports.commonStudents = async (req, res, next) => {
   try {
     let { teacher } = req.query;
     const students = await teacherModels.commonStudents(teacher);
+    res.status(200);
     res.json({
       students,
     });
@@ -40,6 +38,7 @@ exports.suspend = async (req, res, next) => {
 exports.retrieveForNotifications = async (req, res, next) => {
   try {
     const recipients = await teacherModels.retrieveForNotifications(req.body);
+    res.status(200);
     res.json({
       recipients,
     });

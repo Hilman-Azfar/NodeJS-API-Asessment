@@ -23,6 +23,7 @@ exports.genericError = (req, res, next) => {
 
 exports.errorHandler = (err, req, res, next) => {
   const { status, message } = err;
+
   res.status(status);
   res.json({
     success: false,

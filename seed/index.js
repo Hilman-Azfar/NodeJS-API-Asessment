@@ -27,6 +27,7 @@ const seed = async () => {
     console.error(err);
   } finally {
     db.pool.end();
+    process.exit(0);
   }
 };
 

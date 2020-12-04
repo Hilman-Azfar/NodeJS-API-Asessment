@@ -16,8 +16,6 @@ const options = {
 const db = {
   pool: null,
 
-  reconnect: function () {},
-
   initialize: async function () {
     try {
       // create a pool of connection with no database context
@@ -95,13 +93,9 @@ const db = {
       logger.info("db connected");
       this.pool = pool;
     } catch (err) {
-      //retry or throw service unavailable
-      console.log(err);
-      logger.error(err);
+      throw err;
     }
   },
 };
-
-db.initialize();
 
 module.exports = db;

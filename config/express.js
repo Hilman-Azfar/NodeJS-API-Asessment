@@ -1,6 +1,5 @@
 const express = require("express");
 const helmet = require("helmet");
-const config = require("./env");
 const morgan = require("morgan");
 
 const {
@@ -16,12 +15,6 @@ const logger = require("./logger");
 const app = express();
 
 // set up logging
-
-// logging to terminal
-// use morgan middleware to log http requests
-
-// clean up
-// format for errors too
 app.use(
   morgan("combined", {
     stream: {
