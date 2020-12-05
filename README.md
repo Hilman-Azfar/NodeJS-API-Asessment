@@ -50,7 +50,7 @@ The server will run on `http://localhost:8080/` by default.
 
 ### Available endpoints
 
- Endpoint: `POST /api/register`
+* Endpoint: `POST /api/register`
 * Headers: `Content-Type: application/json`
 * Success response status: HTTP 204
 * Request body example:
