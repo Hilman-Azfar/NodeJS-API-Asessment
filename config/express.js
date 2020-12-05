@@ -35,18 +35,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(routes);
 
 // error handling
-// log all errors
 app.use(logErrors);
-
-// catch all if the endpoint requested does not exist
 app.use(genericError);
-
 app.use(databaseError);
-
-// catch joi validation errors and send error msg
 app.use(validationError);
-
-// catch all other errors and send msg
 app.use(errorHandler);
 
 module.exports = app;

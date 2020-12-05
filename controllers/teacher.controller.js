@@ -4,7 +4,6 @@ exports.register = async (req, res, next) => {
   try {
     req.accepts("application/json");
     const { teacher, students } = req.body;
-
     await teacherModels.register(teacher, students);
     res.sendStatus(204);
   } catch (err) {
@@ -39,7 +38,11 @@ exports.suspend = async (req, res, next) => {
 exports.retrieveForNotifications = async (req, res, next) => {
   try {
     req.accepts("application/json");
-    const recipients = await teacherModels.retrieveForNotifications(req.body);
+    const { teacher, notification } = req.body;
+    const recipients = await teacherModels.retrieveForNotifications(
+      teacher,
+      notification
+    );
     res.status(200);
     res.json({
       recipients,

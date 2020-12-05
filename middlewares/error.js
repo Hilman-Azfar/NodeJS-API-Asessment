@@ -7,12 +7,18 @@ exports.logErrors = (err, req, res, next) => {
   next(err);
 };
 
+/**
+ *  Catch all routes not matched
+ */
 exports.genericError = (req, res, next) => {
   const err = new Error(`Endpoint does not exist...`);
   err.status = 404;
   next(err);
 };
 
+/**
+ * If database fails to set up, send temporary down
+ */
 exports.databaseError = (err, req, res, next) => {
   if (db.error === true) {
     res.status(503);
@@ -31,6 +37,10 @@ exports.validationError = (err, req, res, next) => {
   }
 };
 
+/**
+ * Use error codes as source of truth and send
+ * standardized error messages
+ */
 exports.errorHandler = (err, req, res, next) => {
   let { status = 404, message } = err;
 
@@ -42,7 +52,6 @@ exports.errorHandler = (err, req, res, next) => {
         status = 409;
         errmessage = "Entry exists";
         break;
-      default:
     }
   }
   res.status(status);

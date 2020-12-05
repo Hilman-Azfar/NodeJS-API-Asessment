@@ -30,5 +30,3 @@ module.exports = {
     }),
   },
 };
-
-// string manipulation/regex to sort out emails in the notification string

@@ -1,6 +1,12 @@
 const db = require("../config/db");
 const getMentionsAndText = require("../utility/getMentionsAndText");
 
+/**
+ * Register student(s) to one teacher
+ * @param {string} teacher
+ * @param {string[]} students
+ */
+
 exports.register = async (teacher, students) => {
   try {
     const findTeacherSql = `SELECT teacher_id FROM teacher WHERE email = ?`;
@@ -36,6 +42,11 @@ exports.register = async (teacher, students) => {
   }
 };
 
+/**
+ * @param {string|string[]} teacher
+ * @returns {string[]} students
+ */
+
 exports.commonStudents = async (teacher) => {
   try {
     // due to query parser the query can be a string or an array
@@ -60,8 +71,7 @@ exports.commonStudents = async (teacher) => {
                     WHERE email IN (?)
                   )`;
 
-    // this line needed to check if the student is registered
-    // to all the queried teachers
+    // check common among multiple teachers
     if (teacher.length > 1) {
       sql += "AND c1.teacher_id <> c2.teacher_id";
     }
@@ -69,16 +79,20 @@ exports.commonStudents = async (teacher) => {
     const value = [teacher];
     const email = await db.pool.query(sql, value);
 
-    const emailArray = email.map((item) => {
+    const students = email.map((item) => {
       return item.email;
     });
 
-    return emailArray;
+    return students;
   } catch (err) {
     err.status = err.status || 500;
     throw err;
   }
 };
+
+/**
+ * @param {string} student
+ */
 
 exports.suspendOne = async (student) => {
   try {
@@ -99,11 +113,15 @@ exports.suspendOne = async (student) => {
   }
 };
 
-exports.retrieveForNotifications = async (data) => {
+/**
+ * @param {string} teacher
+ * @param {string} notification
+ * @returns {sting[]} recipients
+ */
+
+exports.retrieveForNotifications = async (teacher, notification) => {
   try {
     // parse notification to check for mentions
-
-    const { teacher, notification } = data;
     const parsedNotification = getMentionsAndText(notification);
     const [message, ...mentions] = parsedNotification;
 
