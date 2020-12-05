@@ -7,6 +7,7 @@ const {
   genericError,
   validationError,
   logErrors,
+  databaseError,
 } = require("../middlewares/error");
 
 const routes = require("../routes");
@@ -39,6 +40,8 @@ app.use(logErrors);
 
 // catch all if the endpoint requested does not exist
 app.use(genericError);
+
+app.use(databaseError);
 
 // catch joi validation errors and send error msg
 app.use(validationError);

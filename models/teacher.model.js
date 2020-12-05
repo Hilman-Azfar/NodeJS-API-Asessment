@@ -1,34 +1,35 @@
 const db = require("../config/db");
 const getMentionsAndText = require("../utility/getMentionsAndText");
 
-exports.register = async (req) => {
+exports.register = async (teacher, students) => {
   try {
-    const { teacher, students } = req.body;
+    const findTeacherSql = `SELECT teacher_id FROM teacher WHERE email = ?`;
+    const teacherResult = await db.pool.query(findTeacherSql, [teacher]);
 
+    const teacher_id = teacherResult[0]?.teacher_id;
+    if (!teacher_id) {
+      let err = new Error("Teacher does not exist");
+      err.status = 404;
+      throw err;
+    }
     // insert students into student table if they
     // don't exist, ignore the rest
     // con: auto_increment will increase
-    const sql = `INSERT INTO student(email)
+    const insertStudentSql = `INSERT INTO student(email)
                  VALUES ?
                  ON DUPLICATE KEY UPDATE
                  email = email`;
-    const values = students.map((student) => [student]);
-    const result = await db.pool.query(sql, [values]);
-
-    // get id of teacher
-    const sql2 = `SELECT teacher_id FROM teacher WHERE email = ?`;
-    const result2 = await db.pool.query(sql2, [teacher]);
+    const studentsArray = students.map((student) => [student]);
+    await db.pool.query(insertStudentSql, [studentsArray]);
 
     // add to class table
-    const sql3 = `INSERT INTO class(teacher_id, student_id)
+    const addClassSql = `INSERT INTO class(teacher_id, student_id)
                     SELECT ?, student_id 
                     FROM student 
                     WHERE email IN (?)`;
-    const result3 = await db.pool.query(sql3, [
-      result2[0].teacher_id,
-      students,
-    ]);
+    await db.pool.query(addClassSql, [teacher_id, students]);
   } catch (err) {
+    err.status = err.status || 500;
     throw err;
   }
 };
@@ -42,26 +43,8 @@ exports.commonStudents = async (teacher) => {
     if (typeof teacher === "string") {
       teacher = [teacher];
     }
-    // const sql = `SELECT DISTINCT s.email
-    //              FROM student s
-    //              INNER JOIN class c
-    //                 ON c.student_id = s.student_id
-    //              WHERE
-    //                 c.teacher_id IN (
-    //                   SELECT teacher_id
-    //                   FROM teacher
-    //                   WHERE email IN (?)
-    //                 )`;
-    // const sql = `SELECT DISTINCT s.email
-    //              FROM student s
-    //              INNER JOIN class a
-    //                 ON s.student_id = a.student_id
-    //              INNER JOIN class b
-    //                 ON a.student_id = b.student_id
-    //              INNER JOIN
-    //              WHERE a.teacher_id > b.teacher_id`;
 
-    const sql = `SELECT DISTINCT s.email
+    let sql = `SELECT DISTINCT s.email
                  FROM student s
                  INNER JOIN class c1
                     ON s.student_id = c1.student_id
@@ -73,17 +56,24 @@ exports.commonStudents = async (teacher) => {
                     SELECT teacher_id
                     FROM teacher
                     WHERE email IN (?)
-                 AND c1.teacher_id <> c2.teacher_id
                   )`;
-    const value = [teacher];
-    const result = await db.pool.query(sql, value);
 
-    const resultArray = result.map((item) => {
+    // this line needed to check if the student is registered
+    // to all the queried teachers
+    if (teacher.length > 1) {
+      sql += "AND c1.teacher_id <> c2.teacher_id";
+    }
+
+    const value = [teacher];
+    const email = await db.pool.query(sql, value);
+
+    const emailArray = email.map((item) => {
       return item.email;
     });
 
-    return resultArray;
+    return emailArray;
   } catch (err) {
+    err.status = err.status || 500;
     throw err;
   }
 };
@@ -94,8 +84,15 @@ exports.suspendOne = async (student) => {
                  SET suspended = true
                  WHERE email = ?`;
     const value = [student];
-    await db.pool.query(sql, value);
+    const result = await db.pool.query(sql, value);
+
+    if (result.affectedRows === 0) {
+      const err = new Error("Student not found");
+      err.status = 404;
+      throw err;
+    }
   } catch (err) {
+    err.status = err.status || 500;
     throw err;
   }
 };
@@ -108,18 +105,29 @@ exports.retrieveForNotifications = async (data) => {
     const parsedNotification = getMentionsAndText(notification);
     const [message, ...mentions] = parsedNotification;
 
+    const getTeacherIdSql = `SELECT teacher_id
+                             FROM teacher 
+                             where email = ?`;
+    const result = await db.pool.query(getTeacherIdSql, [teacher]);
+    const teacher_id = result[0]?.teacher_id;
+
+    if (!teacher_id) {
+      const err = new Error("Teacher not found...");
+      err.status = 404;
+      throw err;
+    }
     // insert notification, get id
     // get all the recipients email to respond and add to
     // notification group
 
-    const sql = `INSERT INTO notification (sender_id, message)
-                 VALUES ( 
-                   (SELECT teacher_id FROM teacher
-                    WHERE email = ?), 
-                   ?
-                  )`;
-    const result = await db.pool.query(sql, [teacher, message]);
-    const notification_id = result.insertId;
+    // const sql = `INSERT INTO notification (sender_id, message)
+    //              VALUES (
+    //                (SELECT teacher_id FROM teacher
+    //                 WHERE email = ?),
+    //                ?
+    //               )`;
+    // const result = await db.pool.query(sql, [teacher, message]);
+    // const notification_id = result.insertId;
 
     let getRecipientsSql = `SELECT s.email
                               FROM student s
@@ -137,16 +145,17 @@ exports.retrieveForNotifications = async (data) => {
     const result2 = await db.pool.query(getRecipientsSql, [teacher, mentions]);
     const recipients = result2.map((item) => item.email);
 
-    const notificationGroupSql = `INSERT INTO notification_group(notification_id, recipient_id)
-                                    SELECT ?, student_id
-                                    FROM student
-                                    WHERE email in (?)`;
-    const result3 = await db.pool.query(notificationGroupSql, [
-      notification_id,
-      recipients,
-    ]);
+    // const notificationGroupSql = `INSERT INTO notification_group(notification_id, recipient_id)
+    //                                 SELECT ?, student_id
+    //                                 FROM student
+    //                                 WHERE email in (?)`;
+    // const result3 = await db.pool.query(notificationGroupSql, [
+    //   notification_id,
+    //   recipients,
+    // ]);
     return recipients;
   } catch (err) {
+    err.status = err.status || 500;
     throw err;
   }
 };

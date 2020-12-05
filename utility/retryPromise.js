@@ -14,7 +14,6 @@ const retryPromise = async (cb) => {
     try {
       return await cb();
     } catch (error) {
-      logger.error(error);
       logger.info("attempting to reconnect...");
       const delay = 10000;
       await waitPromise(delay);

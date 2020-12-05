@@ -1,15 +1,13 @@
 const config = require("./config/env");
 const logger = require("./config/logger");
-const retryPromise = require("./utility/retryPromise");
 const db = require("./config/db");
 
 // set up handled in here
 const app = require("./config/express");
 
-retryPromise(db.initialize);
-
 const PORT = config.PORT || 8080;
 
+db.initialize();
 const server = app.listen(PORT, () => {
   logger.info(`Server running on port: ${PORT}`);
 });

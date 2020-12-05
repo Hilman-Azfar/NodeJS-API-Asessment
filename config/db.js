@@ -15,14 +15,14 @@ const options = {
 
 const db = {
   pool: null,
-
+  error: false,
   initialize: async function () {
     try {
       // create a pool of connection with no database context
       // idea is the mysql server might not have the database we need
       // so we have to create one and reconnect with a new pool
 
-      let pool = await mysql.createPool(options);
+      pool = await mysql.createPool(options);
       // promisify for Node.js async/await
       pool.query = util.promisify(pool.query);
 
@@ -89,13 +89,15 @@ const db = {
           ON DELETE CASCADE
       )`;
       await pool.query(notificationGroupTable);
-
-      logger.info("db connected");
       this.pool = pool;
+      this.error = false;
+      logger.info("db connected");
     } catch (err) {
+      this.error = true;
+      logger.error(err.message);
+      err.location = "db.js";
       throw err;
     }
   },
 };
-
 module.exports = db;

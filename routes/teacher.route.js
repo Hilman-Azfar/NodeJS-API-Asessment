@@ -6,20 +6,36 @@ const valid = require("../middlewares/validators/teacher.schema");
 
 module.exports = router;
 
+const flatErrorValidate = (schema) => {
+  const options = {
+    context: false,
+    statusCode: 400,
+    keyByField: true,
+  };
+  return validate(schema, options);
+};
 // validate each request with joi and express-validation
 // validation schemas can be found in the middleware validators
-router.post("/register", validate(valid.register), teacherControl.register);
+router.post(
+  "/register",
+  flatErrorValidate(valid.register),
+  teacherControl.register
+);
 
 router.get(
   "/commonstudents",
-  validate(valid.commonStudents),
+  flatErrorValidate(valid.commonStudents),
   teacherControl.commonStudents
 );
 
-router.post("/suspend", validate(valid.suspend), teacherControl.suspend);
+router.post(
+  "/suspend",
+  flatErrorValidate(valid.suspend),
+  teacherControl.suspend
+);
 
 router.post(
   "/retrievefornotifications",
-  validate(valid.notification),
+  flatErrorValidate(valid.notification),
   teacherControl.retrieveForNotifications
 );
