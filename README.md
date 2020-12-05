@@ -4,24 +4,24 @@ Api for Teachers administrative functions for their students.
 
 ## Hosted Link
 
-This assignment is hosted on **[Heroku!](https://www.heroku.com/)**
+This assignment is hosted on **[Heroku!](https://manage-school-api.herokuapp.com/)**
 
 ## Installation
 
-Clone the repo into your machine and install dependencies.
+1. Clone the repo into your machine and install dependencies.
 
 ```sh
 git clone https://github.com/Hilman-Azfar/NodeJS-API-Asessment.git
-npm install
+npm install or
+yarn install
 touch .env
 ```
 
-Include your .env files with the appropriate credentials
+2. Add a .env file in your root folder with the appropriate credentials
 
 ```Shell
 // .env
 
-DEBUG=true
 NODE_ENV=development
 HOST=localhost
 DBPORT=3306
@@ -38,13 +38,15 @@ npm start
 
 // development
 npm run dev
+yarn dev
 
-# options for debugging
-SET debugging true
+// testing
+npm run test
+yarn test
 ```
 
-Main entry is server.js
-The server will run on `http://localhost:8080/`.
+Main entry is server.js.
+The server will run on `http://localhost:8080/` by default.
 
 ### Available endpoints
 
@@ -60,9 +62,11 @@ The server will run on `http://localhost:8080/`.
 
 - RESTful api
 - Logging to access logs
-- Unit testing with ???
+- Unit testing with mocha chai and supertest
+- MVC project structure
+- Request validation with express-validation and joi
 
-### Known issues
+## Known issues
 
 #### Mysql auth error
 
