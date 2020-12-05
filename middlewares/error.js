@@ -8,7 +8,7 @@ exports.logErrors = (err, req, res, next) => {
 };
 
 exports.genericError = (req, res, next) => {
-  const err = new Error({ message: "Endpoint does not exist..." });
+  const err = new Error(`Endpoint does not exist...`);
   err.status = 404;
   next(err);
 };
