@@ -48,7 +48,7 @@ yarn test
 Main entry is server.js.
 The server will run on `http://localhost:8080/` by default.
 
-### Available endpoints
+## Available endpoints
 ### 1. As a teacher, I want to register one or more students to a specified teacher.
 * Endpoint: `POST /api/register`
 * Headers: `Content-Type: application/json`
