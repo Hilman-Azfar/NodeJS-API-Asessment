@@ -25,5 +25,8 @@
   },
   "devDependencies": {
     "faker": "^5.1.0"
+  },
+  "engines": {
+    "node": "v14"
   }
 }
