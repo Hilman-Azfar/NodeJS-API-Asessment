@@ -50,14 +50,92 @@ The server will run on `http://localhost:8080/` by default.
 
 ### Available endpoints
 
-`POST` /api/register
+ Endpoint: `POST /api/register`
+* Headers: `Content-Type: application/json`
+* Success response status: HTTP 204
+* Request body example:
+```
+{
+  "teacher": "teacherken@gmail.com"
+  "students":
+    [
+      "studentjon@gmail.com",
+      "studenthon@gmail.com"
+    ]
+}
+```
 
-`GET ` /api/commonstudents
-
-`POST ` /api/suspend
-
-`POST ` /api/retrievefornotifications
-
+* Endpoint: `GET /api/commonstudents`
+* Success response status: HTTP 200
+* Request example 1: `GET /api/commonstudents?teacher=teacherken%40gmail.com`
+* Success response body 1:
+```
+{
+  "students" :
+    [
+      "commonstudent1@gmail.com", 
+      "commonstudent2@gmail.com",
+      "student_only_under_teacher_ken@gmail.com"
+    ]
+}
+```
+* Request example 2: `GET /api/commonstudents?teacher=teacherken%40gmail.com&teacher=teacherjoe%40gmail.com`
+* Success response body 2:
+```
+{
+  "students" :
+    [
+      "commonstudent1@gmail.com", 
+      "commonstudent2@gmail.com"
+    ]
+}
+```
+* Endpoint: `POST /api/suspend`
+* Headers: `Content-Type: application/json`
+* Success response status: HTTP 204
+* Request body example:
+```
+{
+  "student" : "studentmary@gmail.com"
+}
+```
+* Endpoint: `POST /api/retrievefornotifications`
+* Headers: `Content-Type: application/json`
+* Success response status: HTTP 200
+* Request body example 1:
+```
+{
+  "teacher":  "teacherken@gmail.com",
+  "notification": "Hello students! @studentagnes@gmail.com @studentmiche@gmail.com"
+}
+```
+* Success response body 1:
+```
+{
+  "recipients":
+    [
+      "studentbob@gmail.com",
+      "studentagnes@gmail.com", 
+      "studentmiche@gmail.com"
+    ]   
+}
+```
+* Request body example 2:
+```
+{
+  "teacher":  "teacherken@gmail.com",
+  "notification": "Hey everybody"
+}
+```
+* Success response body 2:
+```
+{
+  "recipients":
+    [
+      "studentbob@gmail.com"
+    ]   
+}
+```
 ### Features
 
 - RESTful api
