@@ -49,7 +49,7 @@ Main entry is server.js.
 The server will run on `http://localhost:8080/` by default.
 
 ### Available endpoints
-
+### 1. As a teacher, I want to register one or more students to a specified teacher.
 * Endpoint: `POST /api/register`
 * Headers: `Content-Type: application/json`
 * Success response status: HTTP 204
@@ -64,7 +64,7 @@ The server will run on `http://localhost:8080/` by default.
     ]
 }
 ```
-
+### 2. As a teacher, I want to retrieve a list of students common to a given list of teachers.
 * Endpoint: `GET /api/commonstudents`
 * Success response status: HTTP 200
 * Request example 1: `GET /api/commonstudents?teacher=teacherken%40gmail.com`
@@ -90,6 +90,7 @@ The server will run on `http://localhost:8080/` by default.
     ]
 }
 ```
+### 3. As a teacher, I want to suspend a specified student.
 * Endpoint: `POST /api/suspend`
 * Headers: `Content-Type: application/json`
 * Success response status: HTTP 204
@@ -99,6 +100,7 @@ The server will run on `http://localhost:8080/` by default.
   "student" : "studentmary@gmail.com"
 }
 ```
+### 4. As a teacher, I want to retrieve a list of students who can receive a given notification.
 * Endpoint: `POST /api/retrievefornotifications`
 * Headers: `Content-Type: application/json`
 * Success response status: HTTP 200
