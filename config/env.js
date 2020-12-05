@@ -3,6 +3,7 @@ require("dotenv").config();
 module.exports = {
   DEBUG: process.env.DEBUG,
   NODE_ENV: process.env.NODE_ENV,
+  PORT: process.env.PORT,
   MYSQL: {
     host: process.env.HOST,
     port: process.env.DBPORT,
