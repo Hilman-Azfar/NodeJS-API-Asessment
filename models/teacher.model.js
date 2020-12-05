@@ -23,7 +23,9 @@ exports.register = async (teacher, students) => {
     await db.pool.query(insertStudentSql, [studentsArray]);
 
     // add to class table
-    const addClassSql = `INSERT INTO class(teacher_id, student_id)
+    // ignore the duplicates
+    // insert valid
+    const addClassSql = `INSERT IGNORE INTO class(teacher_id, student_id)
                     SELECT ?, student_id 
                     FROM student 
                     WHERE email IN (?)`;

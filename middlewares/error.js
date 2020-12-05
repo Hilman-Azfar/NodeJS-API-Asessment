@@ -32,7 +32,7 @@ exports.validationError = (err, req, res, next) => {
 };
 
 exports.errorHandler = (err, req, res, next) => {
-  const { status = 404, message } = err;
+  let { status = 404, message } = err;
 
   let errmessage = null;
 
