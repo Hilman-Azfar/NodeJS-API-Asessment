@@ -1,17 +1,12 @@
-const db = require("../config/db");
-const faker = require("faker");
+const db = require("../database");
+const model = require("../models/teacher.model");
 
 const seedTeachers = async () => {
   try {
-    let promiseQuery = [];
-    for (let i = 0; i < 5; i++) {
-      let email = faker.internet.email();
-      const sql = `INSERT INTO teacher(email) 
-                   VALUES (?)`;
-      promiseQuery.push(db.pool.query(sql, [email]));
-    }
-    const result = await Promise.all(promiseQuery);
-    console.log(result[0], "-one");
+    const sql = `INSERT INTO teacher(email) 
+                 VALUES (?)`;
+    const values = ["teacherken@gmail.com", "teacherjoe@gmail.com"];
+    await db.pool.query(sql, values);
   } catch (err) {
     console.error(err);
   }
