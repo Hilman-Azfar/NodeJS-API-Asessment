@@ -143,18 +143,6 @@ exports.retrieveForNotifications = async (teacher, notification) => {
       err.status = 404;
       throw err;
     }
-    // insert notification, get id
-    // get all the recipients email to respond and add to
-    // notification group
-
-    // const sql = `INSERT INTO notification (sender_id, message)
-    //              VALUES (
-    //                (SELECT teacher_id FROM teacher
-    //                 WHERE email = ?),
-    //                ?
-    //               )`;
-    // const result = await db.pool.query(sql, [teacher, message]);
-    // const notification_id = result.insertId;
 
     let getRecipientsSql = `SELECT DISTINCT s.email
                               FROM student s
@@ -175,14 +163,6 @@ exports.retrieveForNotifications = async (teacher, notification) => {
     ]);
     const recipientEmails = recipients.map((item) => item.email);
 
-    // const notificationGroupSql = `INSERT INTO notification_group(notification_id, recipient_id)
-    //                                 SELECT ?, student_id
-    //                                 FROM student
-    //                                 WHERE email in (?)`;
-    // const result3 = await db.pool.query(notificationGroupSql, [
-    //   notification_id,
-    //   recipients,
-    // ]);
     return recipientEmails;
   } catch (err) {
     err.status = err.status || 500;
