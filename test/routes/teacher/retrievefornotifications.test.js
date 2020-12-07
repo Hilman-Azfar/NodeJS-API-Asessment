@@ -30,7 +30,7 @@ let request = require("supertest");
 request = request("http://localhost:8080");
 const endpoint = "/api/retrievefornotifications";
 
-describe("POST /api/retrievefornotification", () => {
+describe("POST /api/retrievefornotifications", () => {
   it("No input validation error", (done) => {
     request.post(endpoint).expect(400, done);
   });

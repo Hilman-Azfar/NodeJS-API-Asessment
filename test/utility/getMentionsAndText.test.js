@@ -1,11 +1,25 @@
 const getMentionsAndText = require("../../utility/getMentionsAndText");
 const expect = require("chai").expect;
 
-describe("getMentionAndText", () => {
+describe("getMentionsAndText", () => {
   it("should not split text", (done) => {
     const notification = "Hello world! I went to the @moon";
     const parsed = getMentionsAndText(notification);
     expect(parsed).to.deep.equal(["Hello world! I went to the @moon"]);
+    done();
+  });
+
+  it("should not split invalid emails", (done) => {
+    const notification = "This is a @bad@emailcom";
+    const parsed = getMentionsAndText(notification);
+    expect(parsed).to.deep.equal(["This is a @bad@emailcom"]);
+    done();
+  });
+
+  it("should split fancy email", (done) => {
+    const notification = "Fancy @Oo.uu@fncy.ahhh";
+    const parsed = getMentionsAndText(notification);
+    expect(parsed).to.deep.equal(["Fancy", "@Oo.uu@fncy.ahhh"]);
     done();
   });
 

@@ -8,7 +8,7 @@
   },
   "version": "1.0.0",
   "description": "Api for teachers to perform administrative functions for their students",
-  "main": "index.js",
+  "main": "server.js",
   "repository": "https://github.com/Hilman-Azfar/NodeJS-API-Asessment.git",
   "author": "Hilman Azfar <m.hilman.azfar@gmail.com>",
   "license": "MIT",

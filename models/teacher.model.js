@@ -1,5 +1,6 @@
 const db = require("../config/db");
 const getMentionsAndText = require("../utility/getMentionsAndText");
+const toLowerCaseEmail = require("../utility/toLowerCaseEmail");
 
 /**
  * Register student(s) to one teacher
@@ -9,6 +10,8 @@ const getMentionsAndText = require("../utility/getMentionsAndText");
 
 exports.register = async (teacher, students) => {
   try {
+    teacher = toLowerCaseEmail(teacher);
+    students = toLowerCaseEmail(students);
     const findTeacherSql = `SELECT teacher_id FROM teacher WHERE email = ?`;
     const teacherResult = await db.pool.query(findTeacherSql, [teacher]);
 
@@ -49,6 +52,7 @@ exports.register = async (teacher, students) => {
 
 exports.commonStudents = async (teacher) => {
   try {
+    teacher = toLowerCaseEmail(teacher);
     // due to query parser the query can be a string or an array
     // depending on user input
     // the sql value needs to be an array of arrays
@@ -96,6 +100,7 @@ exports.commonStudents = async (teacher) => {
 
 exports.suspendOne = async (student) => {
   try {
+    student = toLowerCaseEmail(student);
     const sql = `UPDATE student
                  SET suspended = true
                  WHERE email = ?`;
@@ -121,9 +126,11 @@ exports.suspendOne = async (student) => {
 
 exports.retrieveForNotifications = async (teacher, notification) => {
   try {
+    teacher = toLowerCaseEmail(teacher);
     // parse notification to check for mentions
     const parsedNotification = getMentionsAndText(notification);
     const [message, ...mentions] = parsedNotification;
+    const mentionEmails = toLowerCaseEmail(mentions);
 
     const getTeacherIdSql = `SELECT teacher_id
                              FROM teacher 
@@ -149,7 +156,7 @@ exports.retrieveForNotifications = async (teacher, notification) => {
     // const result = await db.pool.query(sql, [teacher, message]);
     // const notification_id = result.insertId;
 
-    let getRecipientsSql = `SELECT s.email
+    let getRecipientsSql = `SELECT DISTINCT s.email
                               FROM student s
                               INNER JOIN class c
                                 ON s.student_id = c.student_id
@@ -158,12 +165,15 @@ exports.retrieveForNotifications = async (teacher, notification) => {
                                 ON c.teacher_id = t.teacher_id
                               WHERE t.email = ?
                               `;
-    if (mentions.length > 0) {
+    if (mentionEmails.length > 0) {
       getRecipientsSql += "OR s.email in (?)";
     }
 
-    const result2 = await db.pool.query(getRecipientsSql, [teacher, mentions]);
-    const recipients = result2.map((item) => item.email);
+    const recipients = await db.pool.query(getRecipientsSql, [
+      teacher,
+      mentionEmails,
+    ]);
+    const recipientEmails = recipients.map((item) => item.email);
 
     // const notificationGroupSql = `INSERT INTO notification_group(notification_id, recipient_id)
     //                                 SELECT ?, student_id
@@ -173,7 +183,7 @@ exports.retrieveForNotifications = async (teacher, notification) => {
     //   notification_id,
     //   recipients,
     // ]);
-    return recipients;
+    return recipientEmails;
   } catch (err) {
     err.status = err.status || 500;
     throw err;
