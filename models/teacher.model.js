@@ -1,4 +1,4 @@
-const db = require("../config/db");
+const db = require("../database");
 const getMentionsAndText = require("../utility/getMentionsAndText");
 const toLowerCaseEmail = require("../utility/toLowerCaseEmail");
 
