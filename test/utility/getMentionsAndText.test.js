@@ -16,13 +16,6 @@ describe("getMentionsAndText", () => {
     done();
   });
 
-  it("should split fancy email", (done) => {
-    const notification = "Fancy @Oo.uu@fncy.ahhh";
-    const parsed = getMentionsAndText(notification);
-    expect(parsed).to.deep.equal(["Fancy", "@Oo.uu@fncy.ahhh"]);
-    done();
-  });
-
   it("should split text and one mention", (done) => {
     const notification = "Hello world @alien@spaceship.com";
     const parsed = getMentionsAndText(notification);
@@ -37,6 +30,17 @@ describe("getMentionsAndText", () => {
       "Hello world",
       "alien@spaceship.com",
       "pirate@ship.com",
+    ]);
+    done();
+  });
+
+  it("should split fancy email", (done) => {
+    const notification = "Fancy @aa.uu@fncy.ahhh @educator@gov.edu.sg";
+    const parsed = getMentionsAndText(notification);
+    expect(parsed).to.deep.equal([
+      "Fancy",
+      "aa.uu@fncy.ahhh",
+      "educator@gov.edu.sg",
     ]);
     done();
   });

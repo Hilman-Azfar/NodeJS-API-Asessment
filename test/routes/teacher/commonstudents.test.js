@@ -24,19 +24,19 @@ request = request("http://localhost:8080");
 const endpoint = "/api/commonstudents";
 
 describe("GET /api/commonstudents", () => {
-  it("No input validation error", (done) => {
+  it("should return 400 when no input", (done) => {
     request.get(endpoint).expect(400, done);
   });
 
-  it("Mispelt query - teacher", (done) => {
+  it("should return 400 when teacher is mispelt", (done) => {
     request.get(endpoint + "?teach=teacherken%40gmail.com").expect(400, done);
   });
 
-  it("Mispelt query email", (done) => {
+  it("should return 400 when email is invalid", (done) => {
     request.get(endpoint + "?teacher=teacherken%40gmailcom").expect(400, done);
   });
 
-  it("Valid query", (done) => {
+  it("should return 200 and student array", (done) => {
     request.get(endpoint + "?teacher=teacherken%40gmail.com").expect(200, done);
   });
 });

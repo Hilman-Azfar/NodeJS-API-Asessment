@@ -29,17 +29,17 @@ request = request("http://localhost:8080");
 const endpoint = "/api/register";
 
 describe("POST /api/register", () => {
-  it("No input validation error", (done) => {
+  it("should return 400 when no input", (done) => {
     request.post(endpoint).expect(400, done);
   });
 
-  it("Wrong method", (done) => {
+  it("should return 404 when wrong method", (done) => {
     request
       .get(endpoint)
       .expect(404, { message: "Endpoint does not exist..." }, done);
   });
 
-  it("Wrong input - Keys misspelt teacher", (done) => {
+  it("should return 400 on wrong key input", (done) => {
     request
       .post(endpoint)
       .send({
@@ -49,7 +49,7 @@ describe("POST /api/register", () => {
       .expect(400, done);
   });
 
-  it("Wrong input - Keys misspelt email", (done) => {
+  it("should return 400 on invalid email", (done) => {
     request
       .post(endpoint)
       .send({
@@ -59,7 +59,7 @@ describe("POST /api/register", () => {
       .expect(400, done);
   });
 
-  it("Wrong input - teacher not found", (done) => {
+  it("should return 404 when teacher not found", (done) => {
     request
       .post(endpoint)
       .send({
@@ -69,7 +69,7 @@ describe("POST /api/register", () => {
       .expect(404, done);
   });
 
-  it("Valid input - adds studentjon and studenthon to teacherken", (done) => {
+  it("should return 204 and add studentjon and studenthon to teacherken", (done) => {
     request
       .post(endpoint)
       .send({

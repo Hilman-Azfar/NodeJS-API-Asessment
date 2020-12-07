@@ -20,11 +20,11 @@ request = request("http://localhost:8080");
 const endpoint = "/api/suspend";
 
 describe("POST /api/suspend", () => {
-  it("No input validation error", (done) => {
+  it("should return 400 when no input", (done) => {
     request.post(endpoint).expect(400, done);
   });
 
-  it("Wrong input - Keys misspelt student", (done) => {
+  it("should return 400 when student is mispelt", (done) => {
     request
       .post(endpoint)
       .send({
@@ -33,7 +33,7 @@ describe("POST /api/suspend", () => {
       .expect(400, done);
   });
 
-  it("Wrong input - invalid email", (done) => {
+  it("should return 400 on invalid email", (done) => {
     request
       .post(endpoint)
       .send({
@@ -42,7 +42,7 @@ describe("POST /api/suspend", () => {
       .expect(400, done);
   });
 
-  it("Wrong input - more than 1 email", (done) => {
+  it("should return 400 when more than one email", (done) => {
     request
       .post(endpoint)
       .send({
@@ -51,7 +51,7 @@ describe("POST /api/suspend", () => {
       .expect(400, done);
   });
 
-  it("No student found", (done) => {
+  it("should return 404 when no student found", (done) => {
     request
       .post(endpoint)
       .send({
@@ -60,11 +60,11 @@ describe("POST /api/suspend", () => {
       .expect(404, done);
   });
 
-  it("Error if text", (done) => {
+  it("should return 400 when sent in wrong content", (done) => {
     request.post(endpoint).send("suspended1@gmail.com").expect(400, done);
   });
 
-  it("Valid input", (done) => {
+  it("should return 200 and recipients object", (done) => {
     request
       .post(endpoint)
       .send({ student: "suspended1@gmail.com" })

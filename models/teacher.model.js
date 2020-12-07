@@ -4,8 +4,8 @@ const toLowerCaseEmail = require("../utility/toLowerCaseEmail");
 
 /**
  * Register student(s) to one teacher
- * @param {string} teacher
- * @param {string[]} students
+ * @param {string} teacher email@gmail.com
+ * @param {string[]} students ['email@gmail.com']
  */
 
 exports.register = async (teacher, students) => {
@@ -46,8 +46,8 @@ exports.register = async (teacher, students) => {
 };
 
 /**
- * @param {string|string[]} teacher
- * @returns {string[]} students
+ * @param {string|string[]} teacher email@gmail.com or ['email@gmail.com']
+ * @returns {string[]} ['email@gmail.com']
  */
 
 exports.commonStudents = async (teacher) => {
@@ -95,7 +95,7 @@ exports.commonStudents = async (teacher) => {
 };
 
 /**
- * @param {string} student
+ * @param {string} student email@gmail.com
  */
 
 exports.suspendOne = async (student) => {

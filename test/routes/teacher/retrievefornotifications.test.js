@@ -23,7 +23,7 @@ possible cases:
 2. mispelt key
 3. invalid email
 4. teacher not found
-5. valid request
+5. valid request - no duplicates correct status code
 */
 
 let request = require("supertest");
@@ -31,11 +31,11 @@ request = request("http://localhost:8080");
 const endpoint = "/api/retrievefornotifications";
 
 describe("POST /api/retrievefornotifications", () => {
-  it("No input validation error", (done) => {
+  it("should return 400 when no input", (done) => {
     request.post(endpoint).expect(400, done);
   });
 
-  it("Wrong input - Keys misspelt teacher", (done) => {
+  it("should return 400 when teacher is mispelt", (done) => {
     request
       .post(endpoint)
       .send({
@@ -45,7 +45,7 @@ describe("POST /api/retrievefornotifications", () => {
       .expect(400, done);
   });
 
-  it("Wrong input - Keys misspelt email", (done) => {
+  it("should return 400 when teacher email is invalid", (done) => {
     request
       .post(endpoint)
       .send({
@@ -55,7 +55,7 @@ describe("POST /api/retrievefornotifications", () => {
       .expect(400, done);
   });
 
-  it("Wrong input - Keys misspelt email", (done) => {
+  it("should return 404 when teacher is not found", (done) => {
     request
       .post(endpoint)
       .send({
@@ -65,7 +65,7 @@ describe("POST /api/retrievefornotifications", () => {
       .expect(404, done);
   });
 
-  it("Valid input - return recipient array of email", (done) => {
+  it("should return 200 and recipient array", (done) => {
     request
       .post(endpoint)
       .send({
