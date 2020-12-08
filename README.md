@@ -24,7 +24,6 @@ touch .env
 
 NODE_ENV=development
 HOST=localhost
-DBPORT=3306
 DBUSER=<insert_your_username>
 PASSWORD=<insert_your_password>
 DATABASE=<your_preferred_database_name>
