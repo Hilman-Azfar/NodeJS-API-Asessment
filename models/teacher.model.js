@@ -3,7 +3,6 @@ const getMentionsAndText = require("../utility/getMentionsAndText");
 const toLowerCaseEmail = require("../utility/toLowerCaseEmail");
 
 /**
- * Register student(s) to one teacher
  * @param {string} teacher email@gmail.com
  * @param {string[]} students ['email@gmail.com']
  */

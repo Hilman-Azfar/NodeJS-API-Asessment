@@ -163,6 +163,8 @@ Student email has to exist in the database.
 }
 ```
 
+Teacher email has to exist.
+
 ### Features
 
 - RESTful api
