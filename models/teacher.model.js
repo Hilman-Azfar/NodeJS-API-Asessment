@@ -127,7 +127,6 @@ exports.suspendOne = async (student) => {
 exports.retrieveForNotifications = async (teacher, notification) => {
   try {
     teacher = toLowerCaseEmail(teacher);
-    // parse notification to check for mentions
     const parsedNotification = getMentionsAndText(notification);
     const [message, ...mentions] = parsedNotification;
     const mentionEmails = toLowerCaseEmail(mentions);

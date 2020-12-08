@@ -68,6 +68,8 @@ The server will run on `http://localhost:8080/` by default.
 }
 ```
 
+Teacher email has to exist in the system. Students can be new/existing entries. Existing students will not be duplicated and only new entries will be added.
+
 ### 2. As a teacher, I want to retrieve a list of students common to a given list of teachers.
 
 - Endpoint: `GET /api/commonstudents`
@@ -111,6 +113,8 @@ The server will run on `http://localhost:8080/` by default.
   "student" : "studentmary@gmail.com"
 }
 ```
+
+Student email has to exist in the database.
 
 ### 4. As a teacher, I want to retrieve a list of students who can receive a given notification.
 
